@@ -9,10 +9,10 @@
 
 	<script>
 
-	d3.json("mydata.json", function (data) { 
-	  var canvas = d3.select('body').append('svg')
-				.attr("width", 500)
-				.attr("height", 500)
+	// d3.json("mydata.json", function (data) { 
+	//   var canvas = d3.select('body').append('svg')
+	// 			.attr("width", 500)
+	// 			.attr("height", 500)
     
     //  -----------  BAR CHART
 
@@ -67,8 +67,13 @@
 	var color = d3.scale.ordinal()
 				.range(['red','blue','orange']);
 
+	var canvas = d3.select('body').append('svg')
+	 			.attr("width", 1500)
+	 			.attr("height", 1500)
+    
+
 	var group = canvas.append('g')
-		.attr('transform', 'translate(100, 100)');
+		.attr('transform', 'translate(300, 300)');
 
 	var arc = d3.svg.arc()
 		.innerRadius(200)
