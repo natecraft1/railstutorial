@@ -1,11 +1,10 @@
 require 'spec_helper'
 
-describe "His" do
-  describe "GET /his" do
-    it "works! (now write some real specs)" do
+describe "tasks" do
+  describe "GET /tasks" do
+    it "display some tasks" do
       # Run the generator again with the --webrat flag if you want to use webrat methods/matchers
-      get his_path
-      response.status.should be(200)
+      	visit tasks_path
     end
   end
 end
