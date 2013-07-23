@@ -1,0 +1,192 @@
+<html>
+<head>
+
+	<meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+	<script type="text/javascript" src="d3/d3.js"></script>
+	<script type="text/javascript" src="d3/d3.geo.js"></script>
+	<!-- <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script> -->
+	<link type="text/css" rel="stylesheet" href="style.css">
+	<link type="text/css" rel="stylesheet" href="colorbrewer/colorbrewer.css">
+
+</head>
+
+<body>
+  <div id="body">
+	<script type="text/javascript">
+
+
+		var feature;
+
+		// var origin = [-71.03,42.37]
+		// 	velocity = [.0010, -.002],
+  // 			t0 = Date.now();
+			
+
+    	
+		// var zoom = d3.behavior.zoom()
+  //  			 .on("zoom", draw);
+
+  		// var map = svg.append('g').attr('class', 'map');
+		var projection = d3.geo.orthographic()
+		    .scale(380)
+		    .origin([-71.03,42.37])
+		    .translate([640, 400]);
+
+
+		var circle = d3.geo.circle()
+		    .origin(projection.origin());
+
+		// TODO fix d3.geo.azimuthal to be consistent with scale
+
+
+		var path = d3.geo.path()
+		    .projection(projection).pointRadius(5);
+
+		var svg = d3.select("#body").append("svg:svg")
+		    .attr("width", 1280)
+		    .attr("height", 800)
+		    .on("mousedown", mousedown);
+
+		// d3.json('cities.json', function(j) {
+			
+		// 		svg.selectAll(path.point)
+		// 		.data(j)
+		// 		.enter().append("path")
+		// 		.data(j.ci(function(d) {
+		// 			return {type: "Point", coordinates: [d.Lon, d.Lat]}
+		// 		})
+		// 		.attr('class', 'point')
+		// 		.attr('d', path)
+		// 		.attr('stroke', 'red');
+
+			
+		// })
+	
+		
+
+      // var points = [{
+      // 	geometry: { type: 'Point',
+      // 				coordinates: pt}
+      // 	type: 'Feature'
+      // }];
+     //  	var data = {"type": "Point", "coordinates": [-71.03, 42.37]};
+     //  	data.forEach(function(d) {
+  			// svg.append("path")
+		   //  .datum({type: "Point", coordinates: [d.Lon, d.Lat]})
+		   //  .attr("d", path.pointRadius(d.Magnitude));
+
+			
+      //   	point = svg.append("g")
+    		// .style("stroke", 'red')
+    		// 	.selectAll("path.point")
+    		// 	.data(data).enter().append("path")
+      // 			.attr("class", "point")
+      // 			.attr("d", path)
+      // 			.attr('fill', 'blue')
+      // 			.attr('r', 5);
+
+
+		d3.json("world-countries.json", function(collection) {
+			
+
+		  	feature = svg.selectAll("path")
+		      .data(collection.features)
+		      .enter().append("svg:path")
+		      .attr("d", clip);
+
+
+		  feature.append("svg:title")
+		      .text(function(d) { return d.properties.name; });
+		
+		// window.coordinates = projection.origin();
+		// window.circ = svg.append('svg:circle')
+		//   	.attr('cx', projection(coordinates)[0])
+  //       	.attr('cy', projection(coordinates)[1])
+  //       	.attr('r', 5)
+  //       	.attr('stroke', 'red')
+  //       	.attr('fill', 'red')
+  //       	.attr( 'type', "Point");
+
+		});
+
+			
+
+		
+		
+
+		d3.select(window)
+		    .on("mousemove", mousemove)
+		    .on("mouseup", mouseup);
+
+		d3.select("select").on("change", function() {
+		  projection.mode(this.value).scale(scale[this.value]);
+		  refresh(750);
+		});
+		
+    	
+        	
+
+		var m0,
+		    o0;
+		function mousedown() {
+		  m0 = [d3.event.pageX, d3.event.pageY];
+		  o0 = projection.origin();
+		  d3.event.preventDefault();
+		}
+
+		function mousemove() {
+		  if (m0) {
+		    var m1 = [d3.event.pageX, d3.event.pageY],
+		        o1 = [o0[0] + (m0[0] - m1[0]) / 8, o0[1] + (m1[1] - m0[1]) / 8];
+		    projection.origin(o1);
+		    circle.origin(o1)
+
+		    
+		  
+		    refresh();
+		  }
+		}
+
+		function mouseup() {
+		  if (m0) {
+		    mousemove();
+		    m0 = null;
+		  }
+		}
+
+		function refresh(duration) {
+		  (duration ? feature.transition().duration(duration) : feature).attr("d", clip);
+		}
+
+		function clip(d) {
+		  return path(circle.clip(d));
+		  console.log(circle.clip(d));
+		}
+
+	  	// ------- ROTATE STUFF ---------
+
+		// d3.timer(function() {
+  //   		var t = Date.now() - t0,
+  //       	o = [origin[0] + velocity[0] * t, origin[1] + velocity[1] * t];
+		// 	    projection.origin(o);
+		// 	    circle.origin(o);
+		// 	    feature.attr("d", draw);
+  // 		});
+
+  // 		 function draw(d) {
+  //  			 return path(circle.clip(d));
+ 	// 	 }
+ 		// 
+
+ 		// -------- ONCE WE HAVE DATA USE THIS FOR POINTS TO MOVE WITH THE GLOBE SPIN
+			// map.append('svg:circle')
+			//  .attr("transform", function(d) { 
+			//      return "translate(" + projection(d.coordinates) + ")"; 
+			//  })
+			//  .attr('r', 5);
+
+		
+	</script>
+  </div>
+</body>
+</html>
